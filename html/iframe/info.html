@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live Webcam Wall</title>
+  <style>
+    img { width: 200px; margin: 10px; border: 2px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Live Webcam Wall</h1>
+  <div id="wall"></div>
+
+  <script>
+    const users = ["user_001", "user_002", "user_003"]; // Example users
+
+    function updateWall() {
+      const wall = document.getElementById("wall");
+      wall.innerHTML = "";
+      users.forEach(user => {
+        const img = document.createElement("img");
+        img.src = `uploads/${user}.jpg?${Date.now()}`;
+        img.alt = user;
+        wall.appendChild(img);
+      });
+    }
+
+    setInterval(updateWall, 3000);
+    updateWall();
+
+
+navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+  const video = document.createElement("video");
+  video.srcObject = stream;
+  video.play();
+
+  setInterval(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+
+    canvas.toBlob(blob => {
+      const formData = new FormData();
+      formData.append("image", blob, "snapshot.jpg");
+
+      fetch("upload.php?user_id=user_001", {
+        method: "POST",
+        body: formData
+      });
+    }, "image/jpeg");
+  }, 3000);
+});
+
+  </script>
+</body>
+</html>

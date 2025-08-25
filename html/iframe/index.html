@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Alle Seiten gleichzeitig</title>
+  <style>
+    body { font-family: sans-serif; }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Alle Seiten gleichzeitig</h1>
+
+  <h2>Startseite</h2>
+  <iframe src="html/startseite.html"></iframe>
+
+  <h2>Info</h2>
+  <iframe src="html/info.html"></iframe>
+
+  <h2>Kontakt</h2>
+  <iframe src="html/kontakt.html"></iframe>
+<h2> Zeit </h2>
+<iframe src="html/zeit.html" width="100%" height="100" style="border:none;"></iframe>
+
+
+<script>
+const http = require('http');
+const WebSocket = require('ws');
+
+const server = http.createServer();
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', socket => {
+  socket.on('message', msg => {
+    // Broadcast to all clients
+    wss.clients.forEach(client => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(msg);
+      }
+    });
+  });
+});
+
+server.listen(3000, () => console.log('WebSocket server running on port 3000'));
+
+const socket = new WebSocket("ws://localhost:3000");
+
+navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+  // Send video frames or signaling data to Node.js
+});
+</script>
+</body>
+</html>
+

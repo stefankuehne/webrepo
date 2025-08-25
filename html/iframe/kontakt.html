@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Kontakt</title>
+</head>
+<body>
+<video autoplay></video>
+<script>
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    document.querySelector("video").srcObject = stream;
+  })
+  .catch(err => console.error("Kamera-Fehler:", err));
+</script>
+  <h2>Kontakt</h2>
+  <p>Du kannst uns per E-Mail oder Telefon erreichen.</p>
+</body>
+</html>
